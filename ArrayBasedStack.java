@@ -16,7 +16,8 @@ public class ArrayBasedStack<T> implements StackInterface<T>{
        @return  The object at the top of the stack. 
        @throws  EmptyStackException if the stack is empty before the operation. */
    public T pop(){
-      return data[0];
+      return data[1];
+      
    }
   
    /** Retrieves this stack's top entry.

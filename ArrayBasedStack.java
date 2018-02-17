@@ -1,41 +1,82 @@
+import java.util.Arrays;
+import java.util.EmptyStackException;
+
 public class ArrayBasedStack<T> implements StackInterface<T>{
-   T[] data;
-   
-   @SuppressWarnings("unchecked")
-   public ArrayBasedStack(){
-      data = (T[])new Object[1];
-   }
+    private T[] data;
+    private int topOfStack;
+    private final int INITIAL_CAPACITY = 5;
+    private boolean initialized;
 
-   /** Adds a new entry to the top of this stack.
-       @param newEntry  An object to be added to the stack. */
-   public void push(T newEntry){
-      data[0] = newEntry;
-   }
-  
-   /** Removes and returns this stack's top entry.
-       @return  The object at the top of the stack. 
-       @throws  EmptyStackException if the stack is empty before the operation. */
-   public T pop(){
-      return data[1];
-      
-   }
-  
-   /** Retrieves this stack's top entry.
-       @return  The object at the top of the stack.
-       @throws  EmptyStackException if the stack is empty. */
-   public T peek(){
-      return data[0];
-   }
-  
-   /** Detects whether this stack is empty.
-       @return  True if the stack is empty. */
-   public boolean isEmpty(){
-      return true;
-   }
-  
-   /** Removes all entries from this stack. */
-   public void clear(){
-   
-   }
+    public ArrayBasedStack(int initialCapacity){
+        if(initialCapacity<0){
+            throw new IllegalArgumentException("Invalid Size");
+        }
+        else{
+            data = (T[]) new Object[initialCapacity];
+            topOfStack = -1;
+            initialized = true;
+        }
+    }
+    public ArrayBasedStack(){
+        data = (T[]) new Object[INITIAL_CAPACITY];
+        topOfStack = -1;
+        initialized = true;
+    }
+    public void push(T newEntry){
+        if(initialized) {
+            topOfStack++;
+            if (topOfStack == data.length - 1) {
+                expandArray();
+            }
 
+            data[topOfStack] = newEntry;
+        }
+        else{
+            throw new SecurityException("Array Stack has not been created.");
+        }
+    }
+    public boolean isEmpty(){
+        return topOfStack<0;
+    }
+    public T pop(){
+        if(initialized){
+            if(isEmpty()){
+                throw new EmptyStackException();
+            }
+            else{
+                T variableAtTop = data[topOfStack];
+                data[topOfStack] = null;
+                topOfStack--;
+                return variableAtTop;
+            }
+        }
+        else{
+            throw new SecurityException("Array Stack has not been created.");
+        }
+    }
+    public T peek(){
+        if(initialized) {
+            if (!isEmpty())
+                return data[topOfStack];
+            else {
+                throw new EmptyStackException();
+            }
+        }
+        else{
+            throw new SecurityException("Array Stack has not been created.");
+        }
+    }
+    public void clear(){
+        if(initialized){
+            if(!isEmpty()){
+                for(T entry: data){
+                    entry=null;
+                }
+            }
+            topOfStack = -1;
+        }
+    }
+    private void expandArray(){
+        data = Arrays.copyOf(data, data.length*2);
+    }
 }
